@@ -1,0 +1,20 @@
+{
+  "config": {
+    "title": "LavvieBot",
+    "step": {
+      "user": {
+        "title": "Fill in your Purrsong Credentials",
+        "data": {
+          "username": "Purrsong Username",
+          "password": "Purrsong Password"
+        }
+      }
+    },
+    "error": {
+      "auth_error": "LavvieBot authentication failed. Are your credentials correct?"
+    },
+    "abort": {
+      "already_configured": "LavvieBot is already configured"
+    }
+  }
+}

@@ -1,0 +1,9 @@
+{
+  "domain": "purrsong",
+  "name": "LavvieBot S",
+  "version": "0.0.1",
+  "config_flow": true,
+  "requirements": ["python-lavviebot==0.0.5"],
+  "dependencies": [],
+  "codeowners": ["@RobertD502"]
+}
