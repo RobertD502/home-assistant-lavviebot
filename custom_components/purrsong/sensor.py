@@ -1,8 +1,7 @@
 """Support for Lavviebot S Litterboxes."""
 
 import logging
-import voluptuous as vol
-from homeassistant.helpers import config_validation as cv, entity_platform
+from homeassistant.helpers import entity_platform
 from homeassistant.components.sensor import SensorEntity
 from homeassistant.const import MASS_POUNDS
 
