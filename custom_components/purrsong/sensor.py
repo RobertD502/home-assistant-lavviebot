@@ -173,7 +173,7 @@ class LavviebotCat(SensorEntity):
     @property
     def state(self) -> int:
         """Return most recent cat weight"""
-        if self._cat.cat_attributes['cat_weight_today'] == None:
+        if self._cat.cat_attributes['cat_weight_today'] is None:
             return 0
         return round(float(self._cat.cat_attributes['cat_weight_today']), 1)
 
@@ -188,19 +188,19 @@ class LavviebotCat(SensorEntity):
 
     @property
     def set_cat_weight(self) -> int:
-        if self._cat.cat_attributes['cat_weight'] == None:
+        if self._cat.cat_attributes['cat_weight'] is None:
             return 0
         return round(float(self._cat.cat_attributes['cat_weight']), 1)
 
     @property
     def poop_count(self) -> int:
-        if self._cat.cat_attributes['poop_count'] == None:
+        if self._cat.cat_attributes['poop_count'] is None:
             return 0
         return self._cat.cat_attributes['poop_count']
 
     @property
     def duration(self) -> int:
-        if self._cat.cat_attributes['duration'] == None:
+        if self._cat.cat_attributes['duration'] is None:
             return 0
         return round(float(self._cat.cat_attributes['duration']), 1)
 
