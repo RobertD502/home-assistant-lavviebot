@@ -1,5 +1,5 @@
 # LavvieBot S
-[![hacs_badge](https://img.shields.io/badge/HACS-Custom-orange.svg)](https://github.com/custom-components/hacs) ![LGTM Grade](https://img.shields.io/lgtm/grade/python/github/RobertD502/home-assistant-lavviebot) ![GitHub manifest version (path)](https://img.shields.io/github/manifest-json/v/RobertD502/home-assistant-lavviebot?filename=custom_components%2Fpurrsong%2Fmanifest.json) ![GitHub all releases](https://img.shields.io/github/downloads/RobertD502/home-assistant-lavviebot/total?color=green)
+[![hacs_badge](https://img.shields.io/badge/HACS-Custom-orange.svg)](https://github.com/custom-components/hacs) ![GitHub manifest version (path)](https://img.shields.io/github/manifest-json/v/RobertD502/home-assistant-lavviebot?filename=custom_components%2Fpurrsong%2Fmanifest.json) ![GitHub all releases](https://img.shields.io/github/downloads/RobertD502/home-assistant-lavviebot/total?color=green)
 
 Custom component for Home Assistant Core for monitoring LavvieBot S Litterboxes and associated Cats
 
