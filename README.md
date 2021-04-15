@@ -1,5 +1,5 @@
 # LavvieBot S
-[![hacs_badge](https://img.shields.io/badge/HACS-Custom-orange.svg)](https://github.com/custom-components/hacs) ![GitHub manifest version (path)](https://img.shields.io/github/manifest-json/v/RobertD502/home-assistant-lavviebot?filename=custom_components%2Fpurrsong%2Fmanifest.json) ![GitHub all releases](https://img.shields.io/github/downloads/RobertD502/home-assistant-lavviebot/total?color=green)
+[![hacs_badge](https://img.shields.io/badge/HACS-Custom-orange.svg)](https://github.com/custom-components/hacs) [![Language grade: Python](https://img.shields.io/lgtm/grade/python/g/RobertD502/home-assistant-lavviebot.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/RobertD502/home-assistant-lavviebot/context:python) ![GitHub manifest version (path)](https://img.shields.io/github/manifest-json/v/RobertD502/home-assistant-lavviebot?filename=custom_components%2Fpurrsong%2Fmanifest.json) ![GitHub all releases](https://img.shields.io/github/downloads/RobertD502/home-assistant-lavviebot/total?color=green)
 
 Custom component for Home Assistant Core for monitoring LavvieBot S Litterboxes and associated Cats
 
@@ -28,14 +28,13 @@ and place inside your Home Assistant Core installation's `custom_components` dir
 ## Features
 
 ### Litterbox Sensor
-Litterbox sensors have a `state` that displays `waste level`. The litterbox sensor icon changes with `waste level`.
+Litterbox sensors have a `state` that displays `waste level`. The litterbox sensor icon changes with `waste level`. The possible values are `Empty or Piled`, `Almost Full`, and `Full`
 
 Available attributes:
 
 | Attribute | Description |
 | --- | --- |
 | `litter_min_weight` | This is the minimum weight of litter needed and is automatically set by your litterbox. Values differ between Natural litter and Bentonite litter. Unit of measurement is `lb`. |
-| `litter_current_weight` | The amount of litter currently in your litterbox. Unit of measurement is `lb`. |
 | `litter_current_weight` | The amount of litter currently in your litterbox. Unit of measurement is `lb`. |
 | `top_litter_status` | Keeps track of the fresh litter available. If sufficient fresh litter is available, displays `Full`. If fresh litter is present, but the storage light is off on the litterbox, attribute is set to `Almost Empty`. If no fresh litter is available then `Refill` is displayed. |
 | `litter_type` | Displays the type of litter set from the litterbox (Natural or Bentonite). |
