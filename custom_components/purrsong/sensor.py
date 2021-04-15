@@ -37,8 +37,6 @@ async def async_setup_entry(hass, config_entry, async_add_entities):
     """Set up Lavviebot devices and cats."""
     lavviebot = hass.data[DOMAIN]
 
-    platform = entity_platform.current_platform.get()
-
     devices = []
     cats = []
     for device in lavviebot.devices():
