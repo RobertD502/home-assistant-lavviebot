@@ -16,6 +16,7 @@ ATTR_LITTER_TYPE = "litter_type"
 ATTR_WAIT_TIME = "wait_time"
 ATTR_TEMPERATURE = "temperature"
 ATTR_HUMIDITY = "humidity"
+ATTR_STATUS = "status"
 ATTR_SET_CAT_WEIGHT = "set_cat_weight"
 ATTR_POOP_COUNT = "poop_count"
 ATTR_DURATION = "duration"
@@ -77,6 +78,15 @@ class LavviebotLitterBox(SensorEntity):
         return None
 
     @property
+    def status(self):
+        """Get Current Litter Box Sttaus"""
+        if self._device.status == 101:
+            return "Auto Cleaning Stopped - Unknown Substances"
+        if self._device.status == 108:
+            return "Motor Overload"
+        return "No Error"
+
+    @property
     def icon(self):
         """Set litterbox icon based on waste level"""
         if self._device.waste_status == 2:
@@ -136,6 +146,7 @@ class LavviebotLitterBox(SensorEntity):
     def device_state_attributes(self) -> dict:
         """Return optional state attributes."""
         return {
+            ATTR_STATUS: self.status,
             ATTR_LITTER_MIN_WEIGHT: self.litter_min_weight,
             ATTR_LITTER_CURRENT_WEIGHT: self.litter_current_weight,
             ATTR_TOP_LITTER_STATUS: self.top_litter_status,
