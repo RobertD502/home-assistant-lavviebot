@@ -1,10 +1,12 @@
 """Support for Lavviebot S Litterboxes."""
 
 import logging
+from datetime import timedelta
 from homeassistant.helpers import entity_platform
 from homeassistant.components.sensor import SensorEntity
 from homeassistant.const import MASS_POUNDS
 
+SCAN_INTERVAL = timedelta(seconds=60)
 
 """Attributes"""
 
