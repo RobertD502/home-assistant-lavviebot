@@ -101,13 +101,22 @@ class LavviebotLitterBox(SensorEntity):
     @property
     def litter_min_weight(self) -> int:
         if self._device.litter_type == 0:
-            return round(float(self._device.min_bottom_ben_weight), 1)
+            if self.hass.config.units.is_metric:
+                return round((float(self._device.min_bottom_ben_weight) / 2.2046226218), 1)
+            else:
+                return round(float(self._device.min_bottom_ben_weight), 1)
         if self._device.litter_type == 1:
-            return round(float(self._device.min_bottom_nat_weight), 1)
+            if self.hass.config.units.is_metric:
+                return round((float(self._device.min_bottom_nat_weight) / 2.2046226218), 1)
+            else:
+                return round(float(self._device.min_bottom_nat_weight), 1)
 
     @property
     def litter_current_weight(self) -> int:
-        return round(float(self._device.litter_bottom_amount), 1)
+        if self.hass.config.units.is_metric:
+            return round((float(self._device.litter_bottom_amount) / 2.2046226218), 1)
+        else:
+            return round(float(self._device.litter_bottom_amount), 1)
 
     @property
     def top_litter_status(self):
@@ -133,7 +142,10 @@ class LavviebotLitterBox(SensorEntity):
 
     @property
     def temperature(self) -> int:
-        return round(((float(self._device.temperature) * (9/5)) + 32), 1)
+        if self.hass.config.units.is_metric:
+            return round(float(self._device.temperature), 1)
+        else:
+            return round(((float(self._device.temperature) * (9/5)) + 32), 1)
 
     @property
     def humidity(self) -> int:
