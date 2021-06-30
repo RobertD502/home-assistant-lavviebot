@@ -34,6 +34,7 @@ Available attributes:
 
 | Attribute | Description |
 | --- | --- |
+| `status` | This attribute lets you know if there are any errors. Currently supported errors are `Auto Cleaning Stopped - Unknown Substances` and `Motor Overload` |
 | `litter_min_weight` | This is the minimum weight of litter needed and is automatically set by your litterbox. Values differ between Natural litter and Bentonite litter. Unit of measurement is `lb`. |
 | `litter_current_weight` | The amount of litter currently in your litterbox. Unit of measurement is `lb`. |
 | `top_litter_status` | Keeps track of the fresh litter available. If sufficient fresh litter is available, displays `Full`. If fresh litter is present, but the storage light is off on the litterbox, attribute is set to `Almost Empty`. If no fresh litter is available then `Refill` is displayed. |
