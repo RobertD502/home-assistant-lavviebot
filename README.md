@@ -35,12 +35,12 @@ Available attributes:
 | Attribute | Description |
 | --- | --- |
 | `status` | This attribute lets you know if there are any errors. Currently supported errors are `Auto Cleaning Stopped - Unknown Substances` and `Motor Overload` |
-| `litter_min_weight` | This is the minimum weight of litter needed and is automatically set by your litterbox. Values differ between Natural litter and Bentonite litter. Unit of measurement is `lb`. |
-| `litter_current_weight` | The amount of litter currently in your litterbox. Unit of measurement is `lb`. |
+| `litter_min_weight` | This is the minimum weight of litter needed and is automatically set by your litterbox. Values differ between Natural litter and Bentonite litter. Unit of measurement is  either `lb` or `kg` based on your Home Assistant configuration. |
+| `litter_current_weight` | The amount of litter currently in your litterbox. Unit of measurement is either `lb` or `kg` based on your Home Assistant configuration. |
 | `top_litter_status` | Keeps track of the fresh litter available. If sufficient fresh litter is available, displays `Full`. If fresh litter is present, but the storage light is off on the litterbox, attribute is set to `Almost Empty`. If no fresh litter is available then `Refill` is displayed. |
 | `litter_type` | Displays the type of litter set from the litterbox (Natural or Bentonite). |
 | `wait_time` | Displays the amount of time before litterbox will scoop waste. Time is in minutes. |
-| `temperature` | Displays temperature reading from litterbox. |
+| `temperature` | Displays temperature reading from litterbox. Unit of measurement is either `F` or `C` based on your Home Assistant configuration. |
 | `humidity` | Displays humidity reading from litterbox. |
 
 ### Cat Sensor
