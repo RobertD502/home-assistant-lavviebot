@@ -40,7 +40,7 @@ Available attributes:
 | `top_litter_status` | Keeps track of the fresh litter available. If sufficient fresh litter is available, displays `Full`. If fresh litter is present, but the storage light is off on the litterbox, attribute is set to `Almost Empty`. If no fresh litter is available then `Refill` is displayed. |
 | `litter_type` | Displays the type of litter set from the litterbox (Natural or Bentonite). |
 | `wait_time` | Displays the amount of time before litterbox will scoop waste. Time is in minutes. |
-| `temperature` | Displays temperature reading from litterbox. Unit of measurement is `Fahrenheit`. |
+| `temperature` | Displays temperature reading from litterbox. |
 | `humidity` | Displays humidity reading from litterbox. |
 
 ### Cat Sensor
