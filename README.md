@@ -42,6 +42,7 @@ Available attributes:
 | `wait_time` | Displays the amount of time before litterbox will scoop waste. Time is in minutes. |
 | `temperature` | Displays temperature reading from litterbox. Unit of measurement is either `F` or `C` based on your Home Assistant configuration. |
 | `humidity` | Displays humidity reading from litterbox. |
+| `last_update` | Displays the date/time, in your local time zone, of when the litterbox sent its latest update to the Purrsong servers. | 
 
 ### Cat Sensor
 Cat sensors have a `state` that displays the most recent `cat weight`. Unit of measurement should correspond to your Home Assistant settings.
