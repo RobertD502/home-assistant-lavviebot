@@ -22,6 +22,7 @@ ATTR_STATUS = "status"
 ATTR_SET_CAT_WEIGHT = "set_cat_weight"
 ATTR_POOP_COUNT = "poop_count"
 ATTR_DURATION = "duration"
+ATTR_LAST_UPDATE = "last_update"
 from .const import (
     DOMAIN
 )
@@ -152,6 +153,10 @@ class LavviebotLitterBox(SensorEntity):
         return self._device.humidity
 
     @property
+    def last_update(self):
+        return self._device.last_update
+
+    @property
     def available(self):
         """Return true if device is available."""
         return self._available
@@ -168,6 +173,7 @@ class LavviebotLitterBox(SensorEntity):
             ATTR_WAIT_TIME: self.wait_time,
             ATTR_TEMPERATURE: self.temperature,
             ATTR_HUMIDITY: self.humidity,
+            ATTR_LAST_UPDATE: self.last_update,
         }
 
     def update(self):
