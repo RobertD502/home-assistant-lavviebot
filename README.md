@@ -1,6 +1,8 @@
 # LavvieBot S
 [![hacs_badge](https://img.shields.io/badge/HACS-Custom-orange.svg)](https://github.com/custom-components/hacs) [![Language grade: Python](https://img.shields.io/lgtm/grade/python/g/RobertD502/home-assistant-lavviebot.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/RobertD502/home-assistant-lavviebot/context:python) ![GitHub manifest version (path)](https://img.shields.io/github/manifest-json/v/RobertD502/home-assistant-lavviebot?filename=custom_components%2Fpurrsong%2Fmanifest.json) ![GitHub all releases](https://img.shields.io/github/downloads/RobertD502/home-assistant-lavviebot/total?color=green)
 
+# The creators of Lavviebot have released a new app and killed the API endpoints that this integration uses. This integration won't work until the backend is completely rewritten to use the new API. This message will be removed once everything is working again and an update is pushed through HACS.
+
 Custom component for Home Assistant Core for monitoring LavvieBot S Litterboxes and associated Cats
 
 **Prior To Installation**
