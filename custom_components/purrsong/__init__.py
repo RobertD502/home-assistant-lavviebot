@@ -1,41 +1,61 @@
-"""Support for Purrsong LavvieBot S"""
-import asyncio
-import logging
-import voluptuous as vol
-from lavviebot import LavvieBotApi
+""" PurrSong (Lavviebot) Component """
+from __future__ import annotations
 
-import homeassistant.helpers.config_validation as cv
-from homeassistant import config_entries
-from homeassistant.const import EVENT_HOMEASSISTANT_STOP
-from homeassistant.exceptions import ConfigEntryNotReady
-from homeassistant.const import (
-    CONF_PASSWORD,
-    CONF_USERNAME
-)
-from .const import DOMAIN
+from lavviebot.exceptions import LavviebotAuthError
 
+from homeassistant.config_entries import ConfigEntry
+from homeassistant.const import CONF_EMAIL, CONF_USERNAME, CONF_PASSWORD, CONF_UNIQUE_ID
+from homeassistant.core import HomeAssistant
 
-_LOGGER = logging.getLogger(__name__)
+from .const import DOMAIN, LOGGER, PLATFORMS
+from .coordinator import LavviebotDataUpdateCoordinator
+from .util import NoLitterBoxesError, NoUserIdError, async_validate_api
 
+async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
+    """Set up PurrSong from a config entry."""
 
-def setup(hass, config):
-    """Setup of the component"""
+    coordinator = LavviebotDataUpdateCoordinator(hass, entry)
+    await coordinator.async_config_entry_first_refresh()
+    hass.data.setdefault(DOMAIN, {})[entry.entry_id] = coordinator
+
+    await hass.config_entries.async_forward_entry_setups(entry, PLATFORMS)
+
     return True
 
+async def async_unload_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
+    """Unload PurrSong config entry."""
+    if unload_ok := await hass.config_entries.async_unload_platforms(entry, PLATFORMS):
+        del hass.data[DOMAIN][entry.entry_id]
+        if not hass.data[DOMAIN]:
+            del hass.data[DOMAIN]
+    return unload_ok
 
-async def async_setup_entry(hass, config_entry):
-    """Set up Lavviebot integration from a config entry."""
-    username = config_entry.data.get(CONF_USERNAME)
-    password = config_entry.data.get(CONF_PASSWORD)
+async def async_migrate_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
+    """Migrate old entry."""
+    # Also set PurrSong account user_id as config unique_id
+    if entry.version == 1:
+        email = entry.data[CONF_USERNAME]
+        password = entry.data[CONF_PASSWORD]
 
-    _LOGGER.info("Initializing the Lavviebot API")
-    lavviebot = await hass.async_add_executor_job(LavvieBotApi, username, password)
-    _LOGGER.info("Connected to API")
+        try:
+            unique_id = await async_validate_api(hass, email, password)
+        except (LavviebotAuthError, ConnectionError, NoLitterBoxesError, NoUserIdError):
+            return False
 
-    hass.data[DOMAIN] = lavviebot
+        entry.version = 2
 
-    hass.async_add_job(
-        hass.config_entries.async_forward_entry_setup(config_entry, "sensor")
-    )
+        LOGGER.debug(f'Migrating PurrSong config entry unique id to {unique_id}')
+        hass.config_entries.async_update_entry(
+            entry,
+            title='PurrSong',
+            data={
+                **entry.data,
+                CONF_EMAIL: email,
+                CONF_PASSWORD: password,
+                CONF_UNIQUE_ID: unique_id
+
+            },
+            unique_id=unique_id,
+        )
 
     return True
