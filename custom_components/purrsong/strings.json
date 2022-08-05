@@ -3,14 +3,14 @@
     "title": "LavvieBot",
     "step": {
       "user": {
-        "title": "Fill in your PurrSong Credentials",
+        "title": "Fill in your PurrSong credentials",
         "data": {
           "username": "PurrSong Username",
           "password": "PurrSong Password"
         }
       },
       "reauth_confirm": {
-        "title": "Reauthenticate with your PurrSong Credentials",
+        "title": "Reauthenticate with your PurrSong credentials",
         "data": {
           "email": "PurrSong Email",
           "password": "PurrSong Password"
