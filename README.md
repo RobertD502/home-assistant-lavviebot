@@ -1,15 +1,19 @@
-# LavvieBot S
-[![hacs_badge](https://img.shields.io/badge/HACS-Custom-orange.svg)](https://github.com/custom-components/hacs) [![Language grade: Python](https://img.shields.io/lgtm/grade/python/g/RobertD502/home-assistant-lavviebot.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/RobertD502/home-assistant-lavviebot/context:python) ![GitHub manifest version (path)](https://img.shields.io/github/manifest-json/v/RobertD502/home-assistant-lavviebot?filename=custom_components%2Fpurrsong%2Fmanifest.json) ![GitHub all releases](https://img.shields.io/github/downloads/RobertD502/home-assistant-lavviebot/total?color=green)
+# LavvieBot S [![hacs_badge](https://img.shields.io/badge/HACS-Custom-orange.svg)](https://github.com/custom-components/hacs)  ![GitHub manifest version (path)](https://img.shields.io/github/manifest-json/v/RobertD502/home-assistant-lavviebot?filename=custom_components%2Fpurrsong%2Fmanifest.json) 
+<a href="https://www.buymeacoffee.com/RobertD502" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/default-orange.png" alt="Buy Me A Coffee" height="100" width="424"></a>
 
-# The creators of Lavviebot have released a new app and killed the API endpoints that this integration uses. This integration won't work until the backend is completely rewritten to use the new API. This message will be removed once everything is working again and an update is pushed through HACS.
 
-Custom component for Home Assistant Core for monitoring LavvieBot S Litterboxes and associated Cats
+## With the PurrSong API change, the backend library and this component had to be rewritten from scratch. If you enjoy this integration, consider donating by clicking on the "Buy me a coffee" badge above - all donations benefit a local animal rescue.
 
-**Prior To Installation**
 
-You will need to create a new account in the Purrsong app and then share an invite from your primary account to the newly created account. If you use your primary account with this custom component, the primary account will get logged out on your mobile device. This can be avoided by creating a dedicated account as previously mentioned.
+**Custom component for Home Assistant for monitoring LavvieBot S litter boxes and associated cats**
+
+## Prior To Installation
+
+You will need to create a new account in the PurrSong app and then share an invite from your primary account to the newly created account. If you use your primary account with this custom component, the primary account will get logged out off the app on your mobile device. This can be avoided by creating a dedicated account as previously mentioned.
 
 ## Installation
+
+**Minimum Home Assistant version requirement:** `2022.8.0`
 
 ### With HACS
 1. Open HACS Settings and add this repository (https://github.com/RobertD502/home-assistant-lavviebot)
@@ -18,41 +22,50 @@ as a Custom Repository (use **Integration** as the category).
 3. Click `Install`
 
 ### Manual
-Copy the `purrsong` directory from `custom_components` in this repository,
-and place inside your Home Assistant Core installation's `custom_components` directory.
+From this repo, copy the `purrsong` directory from `custom_components` and place it inside of your Home Assistant Core installation's `custom_components` directory.
 
 
 ## Setup
 1. Install this integration.
-2. Use Config Flow to configure the integration with your Purrsong credentials.
-    * Initiate Config Flow by navigating to Configuration > Integrations > click the "+" button > find "LavvieBot S" (restart Home Assistant and / or clear browser cache if you can't find it)
+2. Navigate to the Home Assistant Integrations page (Settings --> Devices & Services)
+3. Click the `+ ADD INTEGRATION` button in the lower right-hand corner
+4. Search for `Lavviebot` or `PurrSong`
 
 ## Features
 
-### Litterbox Sensor
-Litterbox sensors have a `state` that displays `waste level`. The litterbox sensor icon changes with `waste level`. The possible values are `Empty or Piled`, `Almost Full`, and `Full`
+Litter boxes and cats are exposed as devices along with their associated entities. See below for entities available.
 
-Available attributes:
+##
 
-| Attribute | Description |
-| --- | --- |
-| `status` | This attribute lets you know if there are any errors. Currently supported errors are `Auto Cleaning Stopped - Unknown Substances` and `Motor Overload` |
-| `litter_min_weight` | This is the minimum weight of litter needed and is automatically set by your litterbox. Values differ between Natural litter and Bentonite litter. Unit of measurement is  either `lb` or `kg` based on your Home Assistant configuration. |
-| `litter_current_weight` | The amount of litter currently in your litterbox. Unit of measurement is either `lb` or `kg` based on your Home Assistant configuration. |
-| `top_litter_status` | Keeps track of the fresh litter available. If sufficient fresh litter is available, displays `Full`. If fresh litter is present, but the storage light is off on the litterbox, attribute is set to `Almost Empty`. If no fresh litter is available then `Refill` is displayed. |
-| `litter_type` | Displays the type of litter set from the litterbox (Natural or Bentonite). |
-| `wait_time` | Displays the amount of time before litterbox will scoop waste. Time is in minutes. |
-| `temperature` | Displays temperature reading from litterbox. Unit of measurement is either `F` or `C` based on your Home Assistant configuration. |
-| `humidity` | Displays humidity reading from litterbox. |
-| `last_update` | Displays the date/time, in your local time zone, of when the litterbox sent its latest update to the Purrsong servers. | 
 
-### Cat Sensor
-Cat sensors have a `state` that displays the most recent `cat weight`. Unit of measurement should correspond to your Home Assistant settings.
+### Litter Box
 
-Available attributes:
+| Entity | Entity type | Description |
+| --- | --- | --- |
+| `Beacon battery` | `sensor` | Battery level for [LavvieBeacon Antenna Module](https://www.robotshop.com/en/lavviebeacon-antenna-module-lavvietag-lavviebot-s.html). State is `Unknown` if there is no LavvieBeacon associated with the litter box. |
+| `Humidity` | `sensor` | Humidity as reported by the litter box. |
+| `Last cat used` | `sensor` | Name of the last cat that used the litter box. Value will be "Unknown" if cat named "Unknown" used the litter box last. |
+| `Last seen` | `sensor` | Displays date and time of the last time litter box communicated with PurrSong servers. |
+| `Last used` | `sensor` | Displays date and time of the last time litter box was used by a cat. |
+| `Last used duration` | `sensor` | Use duration of the cat that used the litter box last. Reported in seconds. |
+| `Litter bottom amount` | `sensor` | Weight of litter currently in the litter tray. |
+| `Litter type` | `sensor` | Type of litter being used. Can be Bentonite or Natural. |
+| `Minimum bottom weight` | `sensor` | Minimum weight that litter tray is set to have in it. |
+| `Storage refill needed` | `binary_sensor` | `On` if fresh litter storage compartment is empty. Otherwise `Off`. Can be used to set up alerts. |
+| `Storage status` | `sensor` | Descriptive status of the litter level in the fresh litter storage compartment. Possible states include: <ul><li>Refill Needed</li><li>Almost Empty</li><li>Full</li> |
+| `Temperature` | `sensor` | Temperature as reported by the litter box. |
+| `Wait time` | `sensor` | Minutes litter box is set to wait, after it has been used, before scooping. |
+| `Waste drawer full` | `binary_sensor` | `On` if the waste drawer is full. Otherwise `Off`. Can be used to set up alerts. |
+| `Waste status` | `sensor` | Descriptive status of the waste level in the waste drawer. Possible states include: <ul><li>Full</li><li>Almost Full</li><li>Empty or Piled</li> |
+| `Firmware update` | `update` | If Lavviebot has a firmware update available, the version of the new firmware will be shown. If Lavviebot firmware is up-to-date, "Up-to-date" will be shown. |
 
-| Attribute | Description |
-| --- | --- |
-| `set_cat_weight` | This is the weight set for each cat from within the Purrsong app. |
-| `poop_count` | The poop count for the current day. |
-| `duration` | The average litterbox usage for the current day. Unit of measurement is `seconds` |
+
+### Cat
+
+| Entity | Entity type | Description |
+| --- | --- | --- |
+| `Litter box use count` | `sensor` | Total number of times cat has used the litter box today. |
+| `Litter box use duration` | `sensor` | Total length of time cat has used the litter box today (in seconds). |
+| `Weight` | `sensor` | Most recent cat weight obtained for the current day |
+
+
