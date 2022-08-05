@@ -3,18 +3,30 @@
     "title": "LavvieBot",
     "step": {
       "user": {
-        "title": "Fill in your Purrsong Credentials",
+        "title": "Fill in your PurrSong Credentials",
         "data": {
-          "username": "Purrsong Username",
-          "password": "Purrsong Password"
+          "username": "PurrSong Username",
+          "password": "PurrSong Password"
+        }
+      },
+      "reauth_confirm": {
+        "title": "Reauthenticate with your PurrSong Credentials",
+        "data": {
+          "email": "PurrSong Email",
+          "password": "PurrSong Password"
         }
       }
     },
     "error": {
-      "auth_error": "LavvieBot authentication failed. Are your credentials correct?"
+      "cannot_connect": "Failed to connect",
+      "incorrect_email_pass": "Invalid Email & Password for selected account",
+      "invalid_auth": "Invalid authentication. Are your credentials correct?",
+      "no_litter_boxes": "No Litter Boxes discovered",
+      "no_user_id": "Could not get User ID on account"
     },
     "abort": {
-      "already_configured": "LavvieBot is already configured"
+      "already_configured": "PurrSong account is already configured",
+      "reauth_successful": "Re-authentication was successful"
     }
   }
 }
