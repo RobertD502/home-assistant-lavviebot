@@ -21,6 +21,7 @@ from homeassistant.const import(
 )
 
 from homeassistant.core import HomeAssistant
+from homeassistant.helpers.entity import EntityCategory
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 from homeassistant.helpers.update_coordinator import CoordinatorEntity
 
@@ -100,6 +101,8 @@ class CatWeight(CoordinatorEntity, SensorEntity):
         return {
             "identifiers": {(DOMAIN, self.cat_data.cat_id)},
             "name": self.cat_data.cat_name,
+            "manufacturer": "PurrSong",
+            "model": "Cat",
         }
 
     @property
@@ -163,6 +166,8 @@ class Duration(CoordinatorEntity, SensorEntity):
         return {
             "identifiers": {(DOMAIN, self.cat_data.cat_id)},
             "name": self.cat_data.cat_name,
+            "manufacturer": "PurrSong",
+            "model": "Cat",
         }
 
     @property
@@ -227,6 +232,8 @@ class UseCount(CoordinatorEntity, SensorEntity):
         return {
             "identifiers": {(DOMAIN, self.cat_data.cat_id)},
             "name": self.cat_data.cat_name,
+            "manufacturer": "PurrSong",
+            "model": "Cat",
         }
 
     @property
@@ -464,6 +471,12 @@ class BeaconBattery(CoordinatorEntity, SensorEntity):
 
         return SensorStateClass.MEASUREMENT
 
+    @property
+    def entity_category(self) -> EntityCategory:
+        """ Set category to diagnostic. """
+
+        return EntityCategory.DIAGNOSTIC
+
 
 class LastCatUsed(CoordinatorEntity, SensorEntity):
     """ Representation of last cat to have used the litter box """
@@ -575,6 +588,12 @@ class LastSeen(CoordinatorEntity, SensorEntity):
         """ Return entity device class """
 
         return SensorDeviceClass.TIMESTAMP
+
+    @property
+    def entity_category(self) -> EntityCategory:
+        """ Set category to diagnostic. """
+
+        return EntityCategory.DIAGNOSTIC
 
     @property
     def icon(self) -> str:
@@ -823,6 +842,12 @@ class LitterType(CoordinatorEntity, SensorEntity):
         return LITTER_TYPE.get(self.device_data.litter_type, 'Unknown')
 
     @property
+    def entity_category(self) -> EntityCategory:
+        """ Set category to diagnostic. """
+
+        return EntityCategory.DIAGNOSTIC
+
+    @property
     def icon(self) -> str:
         return 'mdi:tray'
 
@@ -887,6 +912,12 @@ class MinBottomWeight(CoordinatorEntity, SensorEntity):
         """ Return the type of state class """
 
         return SensorStateClass.MEASUREMENT
+
+    @property
+    def entity_category(self) -> EntityCategory:
+        """ Set category to diagnostic. """
+
+        return EntityCategory.DIAGNOSTIC
 
     @property
     def icon(self) -> str:
@@ -1009,6 +1040,12 @@ class WaitTime(CoordinatorEntity, SensorEntity):
         """ Return minutes as the native unit """
 
         return TIME_MINUTES
+
+    @property
+    def entity_category(self) -> EntityCategory:
+        """ Set category to diagnostic. """
+
+        return EntityCategory.DIAGNOSTIC
 
     @property
     def icon(self) -> str:
