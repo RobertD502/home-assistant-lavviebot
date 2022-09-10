@@ -1,7 +1,7 @@
 {
   "domain": "purrsong",
   "name": "LavvieBot S",
-  "version": "0.1.5",
+  "version": "0.1.6",
   "iot_class": "cloud_polling",
   "documentation": "https://github.com/RobertD502/home-assistant-lavviebot/blob/main/README.md",
   "issue_tracker": "https://github.com/RobertD502/home-assistant-lavviebot/issues",
