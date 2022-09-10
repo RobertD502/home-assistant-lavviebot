@@ -180,7 +180,7 @@ class Duration(CoordinatorEntity, SensorEntity):
     def name(self) -> str:
         """ Return name of the entity """
 
-        return "Litter box use duration"
+        return "Today's average use duration"
 
     @property
     def has_entity_name(self) -> bool:
@@ -199,12 +199,6 @@ class Duration(CoordinatorEntity, SensorEntity):
         """ Return seconds as the native unit """
 
         return TIME_SECONDS
-
-    @property
-    def state_class(self) -> SensorStateClass:
-        """ Return the type of state_class """
-
-        return SensorStateClass.TOTAL_INCREASING
 
     @property
     def icon(self) -> str:
