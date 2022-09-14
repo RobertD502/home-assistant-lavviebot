@@ -24,12 +24,17 @@ as a Custom Repository (use **Integration** as the category).
 ### Manual
 From this repo, copy the `purrsong` directory from `custom_components` and place it inside of your Home Assistant Core installation's `custom_components` directory.
 
+`Note`: If installing manually, in order to be alerted about new releases, you will need to subscribe to releases from this repository. 
 
 ## Setup
 1. Install this integration.
 2. Navigate to the Home Assistant Integrations page (Settings --> Devices & Services)
 3. Click the `+ ADD INTEGRATION` button in the lower right-hand corner
 4. Search for `Lavviebot` or `PurrSong`
+
+Alternatively, click on the button below to add the integration:
+
+[![Open your Home Assistant instance and start setting up a new integration.](https://my.home-assistant.io/badges/config_flow_start.svg)](https://my.home-assistant.io/redirect/config_flow_start/?domain=purrsong)
 
 ## Features
 
