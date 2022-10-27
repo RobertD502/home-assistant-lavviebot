@@ -13,11 +13,11 @@ from homeassistant.components.sensor import (
 
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.const import(
-    MASS_POUNDS,
     PERCENTAGE,
-    TEMP_CELSIUS,
     TIME_MINUTES,
     TIME_SECONDS,
+    UnitOfMass,
+    UnitOfTemperature,
 )
 
 from homeassistant.core import HomeAssistant
@@ -130,10 +130,10 @@ class CatWeight(CoordinatorEntity, SensorEntity):
         return round(self.cat_data.cat_weight_pnds, 1)
 
     @property
-    def native_unit_of_measurement(self) -> str:
+    def native_unit_of_measurement(self) -> UnitOfMass:
         """ Return pounds as the native unit """
 
-        return MASS_POUNDS
+        return UnitOfMass.POUNDS
 
     @property
     def state_class(self) -> SensorStateClass:
@@ -385,10 +385,10 @@ class Temperature(CoordinatorEntity, SensorEntity):
         return self.device_data.temperature_c
 
     @property
-    def native_unit_of_measurement(self) -> str:
+    def native_unit_of_measurement(self) -> UnitOfTemperature:
         """ Return Celsius as the native unit """
 
-        return TEMP_CELSIUS
+        return UnitOfTemperature.CELSIUS
 
     @property
     def device_class(self) -> SensorDeviceClass:
@@ -769,10 +769,10 @@ class LitterBottomAmnt(CoordinatorEntity, SensorEntity):
         return round(self.device_data.litter_bottom_amount_pnds, 1)
 
     @property
-    def native_unit_of_measurement(self) -> str:
+    def native_unit_of_measurement(self) -> UnitOfMass:
         """ Return pounds as the native unit """
 
-        return MASS_POUNDS
+        return UnitOfMass.POUNDS
 
     @property
     def state_class(self) -> SensorStateClass:
@@ -896,10 +896,10 @@ class MinBottomWeight(CoordinatorEntity, SensorEntity):
         return round(self.device_data.min_bottom_weight_pnds, 1)
 
     @property
-    def native_unit_of_measurement(self) -> str:
+    def native_unit_of_measurement(self) -> UnitOfMass:
         """ Return pounds as the native unit """
 
-        return MASS_POUNDS
+        return UnitOfMass.POUNDS
 
     @property
     def state_class(self) -> SensorStateClass:
