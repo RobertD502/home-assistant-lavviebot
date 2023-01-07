@@ -448,10 +448,19 @@ class BeaconBattery(CoordinatorEntity, SensorEntity):
         return True
 
     @property
-    def native_value(self) -> Any:
-        """ Return current battery level """
+    def native_value(self) -> int:
+        """ Return current battery level or 0 if there isn't one """
 
-        return self.device_data.beacon_battery
+        if self.device_data.beacon_battery is not None:
+            return self.device_data.beacon_battery
+        else:
+            return 0
+
+    @property
+    def native_unit_of_measurement(self) -> str:
+        """ Uses percentage as the unit """
+
+        return PERCENTAGE
 
     @property
     def device_class(self) -> SensorDeviceClass:
