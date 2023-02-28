@@ -1,13 +1,13 @@
 {
   "domain": "purrsong",
   "name": "LavvieBot S",
-  "version": "0.1.8",
+  "codeowners": ["@RobertD502"],
+  "config_flow": true,
+  "dependencies": [],
+  "documentation": "https://github.com/RobertD502/home-assistant-lavviebot/blob/main/README.md",
   "integration_type": "hub",
   "iot_class": "cloud_polling",
-  "documentation": "https://github.com/RobertD502/home-assistant-lavviebot/blob/main/README.md",
   "issue_tracker": "https://github.com/RobertD502/home-assistant-lavviebot/issues",
-  "config_flow": true,
   "requirements": ["lavviebotaio==0.0.1.2"],
-  "dependencies": [],
-  "codeowners": ["@RobertD502"]
+  "version": "0.1.8"
 }
