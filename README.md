@@ -1,11 +1,14 @@
 # LavvieBot S [![hacs_badge](https://img.shields.io/badge/HACS-Custom-orange.svg)](https://github.com/custom-components/hacs)  ![GitHub manifest version (path)](https://img.shields.io/github/manifest-json/v/RobertD502/home-assistant-lavviebot?filename=custom_components%2Fpurrsong%2Fmanifest.json) 
 <a href="https://www.buymeacoffee.com/RobertD502" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/default-orange.png" alt="Buy Me A Coffee" height="100" width="424"></a>
+<a href="https://liberapay.com/RobertD502/donate"><img alt="Donate using Liberapay" src="https://liberapay.com/assets/widgets/donate.svg" height="100" width="300"></a>
+
+### A lot of work has been put into creating the backend and this integration. If you enjoy this integration, consider donating by clicking on one of the supported methods above.
 
 
-#### With the PurrSong API change, the backend library and this component had to be rewritten from scratch. If you enjoy this integration, consider donating by clicking on the "Buy me a coffee" badge above - all donations benefit a local animal rescue.
+***All proceeds go towards helping a local animal rescue.**
 
 
-**Custom component for Home Assistant for monitoring LavvieBot S litter boxes and associated cats**
+### Custom component for Home Assistant for monitoring LavvieBot S litter boxes and associated cats
 
 ## Prior To Installation
 
