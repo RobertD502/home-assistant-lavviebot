@@ -51,17 +51,20 @@ Litter boxes and cats are exposed as devices along with their associated entitie
 | Entity | Entity type | Description |
 | --- | --- | --- |
 | `Beacon battery` | `sensor` | Battery level for [LavvieBeacon Antenna Module](https://www.robotshop.com/en/lavviebeacon-antenna-module-lavvietag-lavviebot-s.html). State is `Unknown` if there is no LavvieBeacon associated with the litter box. |
+| `Error time` | `sensor` | When the error, displayed in the `Latest error` sensor, occurred. |
 | `Humidity` | `sensor` | Humidity as reported by the litter box. |
 | `Last cat used` | `sensor` | Name of the last cat that used the litter box. Value will be "Unknown" if cat named "Unknown" used the litter box last. |
 | `Last seen` | `sensor` | Displays date and time of the last time litter box communicated with PurrSong servers. |
 | `Last used` | `sensor` | Displays date and time of the last time litter box was used by a cat. |
 | `Last used duration` | `sensor` | Use duration of the cat that used the litter box last. Reported in seconds. |
+| `Latest error` | `sensor` | Descriptive status of the last error in the litter box error logs. Possible states include: <ul><li>Auto-cleaning stopped. Please check if anything is blocking inside the litter tray.</li><li>Main motor overload occurred</li><li>Main motor or adapter error</li><li>Litter auto-refill stopped</li><li>Unknown error code</li> |
 | `Litter bottom amount` | `sensor` | Weight of litter currently in the litter tray. |
 | `Litter type` | `sensor` | Type of litter being used. Can be Bentonite or Natural. |
 | `Minimum bottom weight` | `sensor` | Minimum weight that litter tray is set to have in it. |
 | `Storage refill needed` | `binary_sensor` | `On` if fresh litter storage compartment is empty. Otherwise `Off`. Can be used to set up alerts. |
 | `Storage status` | `sensor` | Descriptive status of the litter level in the fresh litter storage compartment. Possible states include: <ul><li>Refill Needed</li><li>Almost Empty</li><li>Full</li> |
 | `Temperature` | `sensor` | Temperature as reported by the litter box. |
+| `Use count` | `sensor` | Displays the total amount of times Lavviebot litter box was used today. |
 | `Wait time` | `sensor` | Minutes litter box is set to wait, after it has been used, before scooping. |
 | `Waste drawer full` | `binary_sensor` | `On` if the waste drawer is full. Otherwise `Off`. Can be used to set up alerts. |
 | `Waste status` | `sensor` | Descriptive status of the waste level in the waste drawer. Possible states include: <ul><li>Full</li><li>Almost Full</li><li>Empty or Piled</li> |
