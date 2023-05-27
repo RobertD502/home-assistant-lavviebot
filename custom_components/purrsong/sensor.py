@@ -3,7 +3,7 @@ from __future__ import annotations
 
 from typing import Any
 
-from datetime import datetime
+from datetime import datetime, timezone
 from lavviebot.model import LitterBox, Cat
 from homeassistant.components.sensor import (
     SensorDeviceClass,
@@ -46,6 +46,14 @@ WASTE_STATUS = {
     2: 'Empty or Piled',
 }
 
+ERROR_LOG_CODES = {
+    101: "Auto-cleaning stopped. Please check if anything is blocking inside the litter tray.",
+    105: "Main motor overload occurred",
+    106: "Main motor or adapter error",
+    108: "Main motor overload occurred",
+    109: "Litter auto-refill stopped",
+}
+
 
 async def async_setup_entry(
     hass: HomeAssistant, entry: ConfigEntry, async_add_entities: AddEntitiesCallback
@@ -76,6 +84,9 @@ async def async_setup_entry(
         sensors.append(TopLitterStatus(coordinator, device_id))
         sensors.append(WaitTime(coordinator, device_id))
         sensors.append(WasteStatus(coordinator, device_id))
+        sensors.append(LitterBoxUseCount(coordinator, device_id))
+        sensors.append(LatestError(coordinator, device_id))
+        sensors.append(ErrorTime(coordinator, device_id))
 
     async_add_entities(sensors)
 
@@ -1115,3 +1126,198 @@ class WasteStatus(CoordinatorEntity, SensorEntity):
         if self.device_data.waste_drawer_status == 0:
             return 'mdi:gauge-full'
 
+
+class LitterBoxUseCount(CoordinatorEntity, SensorEntity):
+    """ Representation of litter box use count """
+
+    def __init__(self, coordinator, device_id):
+        super().__init__(coordinator)
+        self.device_id = device_id
+
+
+    @property
+    def device_data(self) -> LitterBox:
+        """ Handle coordinator litter box data """
+
+        return self.coordinator.data.litterboxes[self.device_id]
+
+    @property
+    def device_info(self) -> dict[str, Any]:
+        """ Return device registry information for this entity. """
+
+        return {
+            "identifiers": {(DOMAIN, self.device_data.device_id), (DOMAIN, self.device_data.iot_code_tail)},
+            "name": self.device_data.device_name,
+            "manufacturer": "PurrSong",
+            "model": "Lavviebot S",
+            "sw_version": self.device_data.current_firmware
+        }
+
+    @property
+    def unique_id(self) -> str:
+        """ Sets unique ID for this entity. """
+
+        return str(self.device_data.device_id) + '_lb_use_count'
+
+    @property
+    def name(self) -> str:
+        """ Return name of the entity """
+
+        return "Use count"
+
+    @property
+    def has_entity_name(self) -> bool:
+        """ Indicate that entity has name defined """
+
+        return True
+
+    @property
+    def native_value(self) -> int:
+        """ Returns litter box usage count for today """
+
+        return self.device_data.times_used_today
+
+    @property
+    def icon(self) -> str:
+        """Set icon"""
+        
+        return 'mdi:counter'
+
+
+class LatestError(CoordinatorEntity, SensorEntity):
+    """ Representation of litter box latest error """
+
+    def __init__(self, coordinator, device_id):
+        super().__init__(coordinator)
+        self.device_id = device_id
+
+
+    @property
+    def device_data(self) -> LitterBox:
+        """ Handle coordinator litter box data """
+
+        return self.coordinator.data.litterboxes[self.device_id]
+
+    @property
+    def device_info(self) -> dict[str, Any]:
+        """ Return device registry information for this entity. """
+
+        return {
+            "identifiers": {(DOMAIN, self.device_data.device_id), (DOMAIN, self.device_data.iot_code_tail)},
+            "name": self.device_data.device_name,
+            "manufacturer": "PurrSong",
+            "model": "Lavviebot S",
+            "sw_version": self.device_data.current_firmware
+        }
+
+    @property
+    def unique_id(self) -> str:
+        """ Sets unique ID for this entity. """
+
+        return str(self.device_data.device_id) + '_latest_error'
+
+    @property
+    def name(self) -> str:
+        """ Return name of the entity """
+
+        return "Latest error"
+
+    @property
+    def has_entity_name(self) -> bool:
+        """ Indicate that entity has name defined """
+
+        return True
+
+    @property
+    def entity_category(self) -> EntityCategory:
+        """ Set category to diagnostic. """
+
+        return EntityCategory.DIAGNOSTIC
+
+    @property
+    def native_value(self) -> str:
+        """ Returns the most recent error """
+
+        if self.device_data.error_log:
+            return ERROR_LOG_CODES.get(self.device_data.error_log[0]['status'], 'Unknown error code')
+        else:
+            return "No errors in log"
+
+    @property
+    def icon(self) -> str:
+        """Set icon"""
+        
+        return 'mdi:alert-circle'
+
+
+class ErrorTime(CoordinatorEntity, SensorEntity):
+    """ Representation of when latest error occurred """
+
+    def __init__(self, coordinator, device_id):
+        super().__init__(coordinator)
+        self.device_id = device_id
+
+
+    @property
+    def device_data(self) -> LitterBox:
+        """ Handle coordinator litter box data """
+
+        return self.coordinator.data.litterboxes[self.device_id]
+
+    @property
+    def device_info(self) -> dict[str, Any]:
+        """ Return device registry information for this entity. """
+
+        return {
+            "identifiers": {(DOMAIN, self.device_data.device_id), (DOMAIN, self.device_data.iot_code_tail)},
+            "name": self.device_data.device_name,
+            "manufacturer": "PurrSong",
+            "model": "Lavviebot S",
+            "sw_version": self.device_data.current_firmware
+        }
+
+    @property
+    def unique_id(self) -> str:
+        """ Sets unique ID for this entity. """
+
+        return str(self.device_data.device_id) + '_error_time'
+
+    @property
+    def name(self) -> str:
+        """ Return name of the entity """
+
+        return "Error time"
+
+    @property
+    def has_entity_name(self) -> bool:
+        """ Indicate that entity has name defined """
+
+        return True
+
+    @property
+    def entity_category(self) -> EntityCategory:
+        """ Set category to diagnostic. """
+
+        return EntityCategory.DIAGNOSTIC
+
+    @property
+    def native_value(self) -> datetime | str:
+        """ Returns datetime of the most recent error """
+
+        if self.device_data.error_log:
+            return datetime.utcfromtimestamp(int(self.device_data.error_log[0]['creationTime']) / 1000).replace(tzinfo=timezone.utc)
+        else:
+            return "No errors in log"
+
+    @property
+    def device_class(self) -> SensorDeviceClass:
+        """ Return entity device class """
+
+        return SensorDeviceClass.TIMESTAMP
+
+    @property
+    def icon(self) -> str:
+        """Set icon"""
+        
+        return 'mdi:calendar-clock'
+        
