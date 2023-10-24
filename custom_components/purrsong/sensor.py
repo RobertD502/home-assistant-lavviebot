@@ -1304,10 +1304,7 @@ class ErrorTime(CoordinatorEntity, SensorEntity):
     def native_value(self) -> datetime | str:
         """ Returns datetime of the most recent error """
 
-        if self.device_data.error_log:
-            return datetime.utcfromtimestamp(int(self.device_data.error_log[0]['creationTime']) / 1000).replace(tzinfo=timezone.utc)
-        else:
-            return "No errors in log"
+        return datetime.utcfromtimestamp(int(self.device_data.error_log[0]['creationTime']) / 1000).replace(tzinfo=timezone.utc)
 
     @property
     def device_class(self) -> SensorDeviceClass:
@@ -1320,4 +1317,13 @@ class ErrorTime(CoordinatorEntity, SensorEntity):
         """Set icon"""
         
         return 'mdi:calendar-clock'
+
+    @property
+    def available(self) -> bool:
+        """Make entity available if there is an error log"""
+
+        if self.device_data.error_log:
+            return True
+        else:
+            return False
         
