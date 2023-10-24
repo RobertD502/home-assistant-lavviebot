@@ -16,7 +16,7 @@ You will need to create a new account in the PurrSong app and then share an invi
 
 ## Installation
 
-**Minimum Home Assistant version requirement:** `2022.8.0`
+**Minimum Home Assistant version requirement:** `2022.11.0`
 
 ### With HACS
 1. Open HACS Settings and add this repository (https://github.com/RobertD502/home-assistant-lavviebot)
