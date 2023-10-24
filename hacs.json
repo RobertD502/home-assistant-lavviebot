@@ -2,5 +2,8 @@
 {
   "name": "Lavviebot S",
   "render_readme": true,
-  "homeassistant": "2022.11.0b0"
+  "country": "US",
+  "homeassistant": "2022.11.0b0",
+  "zip_release": true,
+  "filename": "purrsong.zip"
 }
