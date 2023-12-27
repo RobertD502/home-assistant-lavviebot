@@ -44,9 +44,9 @@ class LavviebotDataUpdateCoordinator(DataUpdateCoordinator):
         try:
             data = await self.client.async_get_data()
         except LavviebotAuthError as error:
-            raise ConfigEntryAuthFailed from error
+            raise ConfigEntryAuthFailed(error) from error
         except LavviebotError as error:
-            raise UpdateFailed from error
+            raise UpdateFailed(error) from error
         if not data.litterboxes:
             raise UpdateFailed("No Litter Boxes found")
         return data
