@@ -14,10 +14,9 @@ from homeassistant.components.sensor import (
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.const import(
     PERCENTAGE,
-    TIME_MINUTES,
-    TIME_SECONDS,
     UnitOfMass,
     UnitOfTemperature,
+    UnitOfTime,
 )
 
 from homeassistant.core import HomeAssistant
@@ -206,10 +205,10 @@ class Duration(CoordinatorEntity, SensorEntity):
         return round(self.cat_data.duration, 1)
 
     @property
-    def native_unit_of_measurement(self) -> str:
+    def native_unit_of_measurement(self) -> UnitOfTime:
         """ Return seconds as the native unit """
 
-        return TIME_SECONDS
+        return UnitOfTime.SECONDS
 
     @property
     def icon(self) -> str:
@@ -722,10 +721,10 @@ class LastUsedDuration(CoordinatorEntity, SensorEntity):
         return round(self.device_data.last_used_duration, 1)
 
     @property
-    def native_unit_of_measurement(self) -> str:
+    def native_unit_of_measurement(self) -> UnitOfTime:
         """ Return seconds as the native unit """
 
-        return TIME_SECONDS
+        return UnitOfTime.SECONDS
 
     @property
     def state_class(self) -> SensorStateClass:
@@ -1050,10 +1049,10 @@ class WaitTime(CoordinatorEntity, SensorEntity):
         return self.device_data.wait_time
 
     @property
-    def native_unit_of_measurement(self) -> str:
+    def native_unit_of_measurement(self) -> UnitOfTime:
         """ Return minutes as the native unit """
 
-        return TIME_MINUTES
+        return UnitOfTime.MINUTES
 
     @property
     def entity_category(self) -> EntityCategory:
