@@ -1,3 +1,5 @@
+# Purrsong is currently rate limiting connections to their API. As a result, you may see 500 status code messages in your log. I am actively working on/testing a workaround fix. This message will be removed when a fix has been implemented.
+
 # LavvieBot S [![hacs_badge](https://img.shields.io/badge/HACS-Custom-orange.svg)](https://github.com/custom-components/hacs)  ![GitHub manifest version (path)](https://img.shields.io/github/manifest-json/v/RobertD502/home-assistant-lavviebot?filename=custom_components%2Fpurrsong%2Fmanifest.json) 
 <a href="https://www.buymeacoffee.com/RobertD502" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/default-orange.png" alt="Buy Me A Coffee" height="100" width="424"></a>
 <a href="https://liberapay.com/RobertD502/donate"><img alt="Donate using Liberapay" src="https://liberapay.com/assets/widgets/donate.svg" height="100" width="300"></a>
