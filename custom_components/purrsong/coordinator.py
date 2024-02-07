@@ -54,7 +54,4 @@ class LavviebotDataUpdateCoordinator(DataUpdateCoordinator):
             self.client.token = None
             return await self._async_update_data()
         else:
-            if not data.litterboxes:
-                raise UpdateFailed("No Litter Boxes found")
-            else:
-                return data
+            return data
