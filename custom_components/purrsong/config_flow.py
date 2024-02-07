@@ -13,7 +13,7 @@ from homeassistant.data_entry_flow import FlowResult
 import homeassistant.helpers.config_validation as cv
 
 from .const import DEFAULT_NAME, DOMAIN
-from .util import NoLitterBoxesError, NoUserIdError, async_validate_api
+from .util import NoDevicesError, async_validate_api
 
 DATA_SCHEMA = vol.Schema(
     {
@@ -25,7 +25,7 @@ DATA_SCHEMA = vol.Schema(
 class LavviebotConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
     """ Handle a config flow for Purrsong integration """
 
-    VERSION = 2
+    VERSION = 3
 
     entry: config_entries.ConfigEntry | None
 
@@ -46,15 +46,13 @@ class LavviebotConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
             email = user_input[CONF_EMAIL]
             password = user_input[CONF_PASSWORD]
             try:
-                user_id = await async_validate_api(self.hass, email, password)
+                await async_validate_api(email, password)
             except LavviebotAuthError:
                 errors["base"] = "invalid_auth"
             except ConnectionError:
                 errors["base"] = "cannot_connect"
-            except NoLitterBoxesError:
-                errors["base"] = "no_litter_boxes"
-            except NoUserIdError:
-                errors["base"] = "no_user_id"
+            except NoDevicesError:
+                errors["base"] = "no_devices"
             else:
                 assert self.entry is not None
 
@@ -89,17 +87,15 @@ class LavviebotConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
             email = user_input[CONF_EMAIL]
             password = user_input[CONF_PASSWORD]
             try:
-                user_id = await async_validate_api(self.hass, email, password)
+                await async_validate_api(email, password)
             except LavviebotAuthError:
                 errors["base"] = "invalid_auth"
             except ConnectionError:
                 errors["base"] = "cannot_connect"
-            except NoLitterBoxesError:
-                errors["base"] = "no_litter_boxes"
-            except NoUserIdError:
-                errors["base"] = "no_user_id"
+            except NoDevicesError:
+                errors["base"] = "no_devices"
             else:
-                await self.async_set_unique_id(user_id)
+                await self.async_set_unique_id(email)
                 self._abort_if_unique_id_configured()
 
                 return self.async_create_entry(
