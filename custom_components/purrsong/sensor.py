@@ -4,7 +4,7 @@ from __future__ import annotations
 from typing import Any
 
 from datetime import datetime, timezone
-from lavviebot.model import LitterBox, Cat
+from lavviebot.model import Cat, LavvieScanner, LavvieTag, LitterBox
 from homeassistant.components.sensor import (
     SensorDeviceClass,
     SensorEntity,
@@ -65,27 +65,50 @@ async def async_setup_entry(
 
     sensors = []
     for cat_id, cat_data in coordinator.data.cats.items():
-        sensors.append(CatWeight(coordinator, cat_id))
-        sensors.append(Duration(coordinator, cat_id))
-        sensors.append(UseCount(coordinator, cat_id))
+        if coordinator.data.cats[cat_id].has_lavvietag:
+            sensors.extend((
+                CatRest(coordinator, cat_id),
+                CatRun(coordinator, cat_id),
+                CatSleep(coordinator, cat_id),
+                CatWalk(coordinator, cat_id),
+                CatZoomies(coordinator, cat_id)
+            ))
+        sensors.extend((
+            CatWeight(coordinator, cat_id),
+            Duration(coordinator, cat_id),
+            UseCount(coordinator, cat_id),
+        ))
 
     for device_id, device_data in coordinator.data.litterboxes.items():
-        sensors.append(Humidity(coordinator, device_id))
-        sensors.append(Temperature(coordinator, device_id))
-        sensors.append(BeaconBattery(coordinator, device_id))
-        sensors.append(LastCatUsed(coordinator, device_id))
-        sensors.append(LastSeen(coordinator, device_id))
-        sensors.append(LastUsed(coordinator, device_id))
-        sensors.append(LastUsedDuration(coordinator, device_id))
-        sensors.append(LitterBottomAmnt(coordinator, device_id))
-        sensors.append(LitterType(coordinator, device_id))
-        sensors.append(MinBottomWeight(coordinator, device_id))
-        sensors.append(TopLitterStatus(coordinator, device_id))
-        sensors.append(WaitTime(coordinator, device_id))
-        sensors.append(WasteStatus(coordinator, device_id))
-        sensors.append(LitterBoxUseCount(coordinator, device_id))
-        sensors.append(LatestError(coordinator, device_id))
-        sensors.append(ErrorTime(coordinator, device_id))
+        sensors.extend((
+            Humidity(coordinator, device_id),
+            Temperature(coordinator, device_id),
+            BeaconBattery(coordinator, device_id),
+            LastCatUsed(coordinator, device_id),
+            LastSeen(coordinator, device_id),
+            LastUsed(coordinator, device_id),
+            LastUsedDuration(coordinator, device_id),
+            LitterBottomAmnt(coordinator, device_id),
+            LitterType(coordinator, device_id),
+            MinBottomWeight(coordinator, device_id),
+            TopLitterStatus(coordinator, device_id),
+            WaitTime(coordinator, device_id),
+            WasteStatus(coordinator, device_id),
+            LitterBoxUseCount(coordinator, device_id),
+            LatestError(coordinator, device_id),
+            ErrorTime(coordinator, device_id),
+        ))
+    
+    # LavvieScanner
+    for device_id, device_data in coordinator.data.lavvie_scanners.items():
+        sensors.append(ScannerLastSeen(coordinator, device_id))
+
+    # LavvieTag
+    for device_id, device_data in coordinator.data.lavvie_tags.items():
+        sensors.extend((
+            TagLastSeen(coordinator, device_id),
+            TagBattery(coordinator, device_id)
+        ))
 
     async_add_entities(sensors)
 
@@ -273,6 +296,324 @@ class UseCount(CoordinatorEntity, SensorEntity):
     @property
     def icon(self) -> str:
         return 'mdi:numeric'
+
+
+class CatRest(CoordinatorEntity, SensorEntity):
+    """ Representation of Cat's Daily Resting activity """
+
+    def __init__(self, coordinator, cat_id):
+        super().__init__(coordinator)
+        self.cat_id = cat_id
+
+
+    @property
+    def cat_data(self) -> Cat:
+        """ Handle coordinator cat data """
+
+        return self.coordinator.data.cats[self.cat_id]
+
+    @property
+    def device_info(self) -> dict[str, Any]:
+        """ Return device registry information for this entity. """
+
+        return {
+            "identifiers": {(DOMAIN, self.cat_data.cat_id)},
+            "name": self.cat_data.cat_name,
+            "manufacturer": "PurrSong",
+            "model": "Cat",
+        }
+
+    @property
+    def unique_id(self) -> str:
+        """ Sets unique ID for this entity. """
+
+        return str(self.cat_data.cat_id) + '_resting'
+
+    @property
+    def name(self) -> str:
+        """ Return name of the entity """
+
+        return "Resting"
+
+    @property
+    def has_entity_name(self) -> bool:
+        """ Indicate that entity has name defined """
+
+        return True
+
+    @property
+    def native_value(self) -> float | int:
+        """ Return today's total resting in seconds """
+
+        return self.cat_data.resting
+
+    @property
+    def native_unit_of_measurement(self) -> UnitOfTime:
+        """ Return seconds as the native unit """
+
+        return UnitOfTime.SECONDS
+
+    @property
+    def device_class(self) -> SensorDeviceClass:
+        """ Return entity device class. """
+
+        return SensorDeviceClass.DURATION
+
+    @property
+    def icon(self) -> str:
+        return 'mdi:cat'
+
+
+class CatRun(CoordinatorEntity, SensorEntity):
+    """ Representation of Cat's Daily Running activity """
+
+    def __init__(self, coordinator, cat_id):
+        super().__init__(coordinator)
+        self.cat_id = cat_id
+
+
+    @property
+    def cat_data(self) -> Cat:
+        """ Handle coordinator cat data """
+
+        return self.coordinator.data.cats[self.cat_id]
+
+    @property
+    def device_info(self) -> dict[str, Any]:
+        """ Return device registry information for this entity. """
+
+        return {
+            "identifiers": {(DOMAIN, self.cat_data.cat_id)},
+            "name": self.cat_data.cat_name,
+            "manufacturer": "PurrSong",
+            "model": "Cat",
+        }
+
+    @property
+    def unique_id(self) -> str:
+        """ Sets unique ID for this entity. """
+
+        return str(self.cat_data.cat_id) + '_running'
+
+    @property
+    def name(self) -> str:
+        """ Return name of the entity """
+
+        return "Running"
+
+    @property
+    def has_entity_name(self) -> bool:
+        """ Indicate that entity has name defined """
+
+        return True
+
+    @property
+    def native_value(self) -> float | int:
+        """ Return today's total running in seconds """
+
+        return self.cat_data.running
+
+    @property
+    def native_unit_of_measurement(self) -> UnitOfTime:
+        """ Return seconds as the native unit """
+
+        return UnitOfTime.SECONDS
+
+    @property
+    def device_class(self) -> SensorDeviceClass:
+        """ Return entity device class. """
+
+        return SensorDeviceClass.DURATION
+
+    @property
+    def icon(self) -> str:
+        return 'mdi:run'
+
+
+class CatSleep(CoordinatorEntity, SensorEntity):
+    """ Representation of Cat's Daily Sleeping activity """
+
+    def __init__(self, coordinator, cat_id):
+        super().__init__(coordinator)
+        self.cat_id = cat_id
+
+
+    @property
+    def cat_data(self) -> Cat:
+        """ Handle coordinator cat data """
+
+        return self.coordinator.data.cats[self.cat_id]
+
+    @property
+    def device_info(self) -> dict[str, Any]:
+        """ Return device registry information for this entity. """
+
+        return {
+            "identifiers": {(DOMAIN, self.cat_data.cat_id)},
+            "name": self.cat_data.cat_name,
+            "manufacturer": "PurrSong",
+            "model": "Cat",
+        }
+
+    @property
+    def unique_id(self) -> str:
+        """ Sets unique ID for this entity. """
+
+        return str(self.cat_data.cat_id) + '_sleeping'
+
+    @property
+    def name(self) -> str:
+        """ Return name of the entity """
+
+        return "Sleeping"
+
+    @property
+    def has_entity_name(self) -> bool:
+        """ Indicate that entity has name defined """
+
+        return True
+
+    @property
+    def native_value(self) -> float | int:
+        """ Return today's total sleep in seconds """
+
+        return self.cat_data.sleeping
+
+    @property
+    def native_unit_of_measurement(self) -> UnitOfTime:
+        """ Return seconds as the native unit """
+
+        return UnitOfTime.SECONDS
+
+    @property
+    def device_class(self) -> SensorDeviceClass:
+        """ Return entity device class. """
+
+        return SensorDeviceClass.DURATION
+
+    @property
+    def icon(self) -> str:
+        return 'mdi:sleep'
+
+
+class CatWalk(CoordinatorEntity, SensorEntity):
+    """ Representation of Cat's Daily Walking activity """
+
+    def __init__(self, coordinator, cat_id):
+        super().__init__(coordinator)
+        self.cat_id = cat_id
+
+
+    @property
+    def cat_data(self) -> Cat:
+        """ Handle coordinator cat data """
+
+        return self.coordinator.data.cats[self.cat_id]
+
+    @property
+    def device_info(self) -> dict[str, Any]:
+        """ Return device registry information for this entity. """
+
+        return {
+            "identifiers": {(DOMAIN, self.cat_data.cat_id)},
+            "name": self.cat_data.cat_name,
+            "manufacturer": "PurrSong",
+            "model": "Cat",
+        }
+
+    @property
+    def unique_id(self) -> str:
+        """ Sets unique ID for this entity. """
+
+        return str(self.cat_data.cat_id) + '_walking'
+
+    @property
+    def name(self) -> str:
+        """ Return name of the entity """
+
+        return "Walking"
+
+    @property
+    def has_entity_name(self) -> bool:
+        """ Indicate that entity has name defined """
+
+        return True
+
+    @property
+    def native_value(self) -> float | int:
+        """ Return today's total walking in seconds """
+
+        return self.cat_data.walking
+
+    @property
+    def native_unit_of_measurement(self) -> UnitOfTime:
+        """ Return seconds as the native unit """
+
+        return UnitOfTime.SECONDS
+
+    @property
+    def device_class(self) -> SensorDeviceClass:
+        """ Return entity device class. """
+
+        return SensorDeviceClass.DURATION
+
+    @property
+    def icon(self) -> str:
+        return 'mdi:walk'
+
+
+class CatZoomies(CoordinatorEntity, SensorEntity):
+    """ Representation of Cat's Daily Zoomies """
+
+    def __init__(self, coordinator, cat_id):
+        super().__init__(coordinator)
+        self.cat_id = cat_id
+
+
+    @property
+    def cat_data(self) -> Cat:
+        """ Handle coordinator cat data """
+
+        return self.coordinator.data.cats[self.cat_id]
+
+    @property
+    def device_info(self) -> dict[str, Any]:
+        """ Return device registry information for this entity. """
+
+        return {
+            "identifiers": {(DOMAIN, self.cat_data.cat_id)},
+            "name": self.cat_data.cat_name,
+            "manufacturer": "PurrSong",
+            "model": "Cat",
+        }
+
+    @property
+    def unique_id(self) -> str:
+        """ Sets unique ID for this entity. """
+
+        return str(self.cat_data.cat_id) + '_zoomies'
+
+    @property
+    def name(self) -> str:
+        """ Return name of the entity """
+
+        return "Zoomies"
+
+    @property
+    def has_entity_name(self) -> bool:
+        """ Indicate that entity has name defined """
+
+        return True
+
+    @property
+    def native_value(self) -> float | int:
+        """ Return today's total zoomies """
+
+        return self.cat_data.zoomies
+
+    @property
+    def icon(self) -> str:
+        return 'mdi:run-fast'
 
 
 class Humidity(CoordinatorEntity, SensorEntity):
@@ -1326,3 +1667,214 @@ class ErrorTime(CoordinatorEntity, SensorEntity):
         else:
             return False
         
+
+class ScannerLastSeen(CoordinatorEntity, SensorEntity):
+    """ Representation of last date/time LavvieScanner connected to PurrSong servers """
+
+    def __init__(self, coordinator, device_id):
+        super().__init__(coordinator)
+        self.device_id = device_id
+
+
+    @property
+    def device_data(self) -> LavvieScanner:
+        """ Handle coordinator LavvieScanner data """
+
+        return self.coordinator.data.lavvie_scanners[self.device_id]
+
+    @property
+    def device_info(self) -> dict[str, Any]:
+        """ Return device registry information for this entity. """
+
+        return {
+            "identifiers": {(DOMAIN, self.device_data.device_id), (DOMAIN, self.device_data.iot_code_tail)},
+            "name": self.device_data.device_name,
+            "manufacturer": "PurrSong",
+            "model": "LavvieScanner",
+            "sw_version": self.device_data.current_firmware
+        }
+
+    @property
+    def unique_id(self) -> str:
+        """ Sets unique ID for this entity. """
+
+        return str(self.device_data.device_id) + '_last_seen'
+
+    @property
+    def name(self) -> str:
+        """ Return name of the entity """
+
+        return "Last seen"
+
+    @property
+    def has_entity_name(self) -> bool:
+        """ Indicate that entity has name defined """
+
+        return True
+
+    @property
+    def native_value(self) -> datetime:
+        """ Returns date/time of the last time scanner connected to PurrSong servers """
+
+        return self.device_data.last_seen
+
+    @property
+    def device_class(self) -> SensorDeviceClass:
+        """ Return entity device class """
+
+        return SensorDeviceClass.TIMESTAMP
+
+    @property
+    def entity_category(self) -> EntityCategory:
+        """ Set category to diagnostic. """
+
+        return EntityCategory.DIAGNOSTIC
+
+    @property
+    def icon(self) -> str:
+        return 'mdi:web'
+
+
+class TagLastSeen(CoordinatorEntity, SensorEntity):
+    """ Representation of last date/time LavvieTag connected """
+
+    def __init__(self, coordinator, device_id):
+        super().__init__(coordinator)
+        self.device_id = device_id
+
+
+    @property
+    def device_data(self) -> LavvieTag:
+        """ Handle coordinator LavvieTag data """
+
+        return self.coordinator.data.lavvie_tags[self.device_id]
+
+    @property
+    def device_info(self) -> dict[str, Any]:
+        """ Return device registry information for this entity. """
+
+        return {
+            "identifiers": {(DOMAIN, self.device_data.device_id), (DOMAIN, self.device_data.iot_code_tail)},
+            "name": self.device_data.device_name,
+            "manufacturer": "PurrSong",
+            "model": "LavvieTag",
+            "sw_version": self.device_data.current_firmware
+        }
+
+    @property
+    def unique_id(self) -> str:
+        """ Sets unique ID for this entity. """
+
+        return str(self.device_data.device_id) + '_tag_last_seen'
+
+    @property
+    def name(self) -> str:
+        """ Return name of the entity """
+
+        return "Last seen"
+
+    @property
+    def has_entity_name(self) -> bool:
+        """ Indicate that entity has name defined """
+
+        return True
+
+    @property
+    def native_value(self) -> datetime:
+        """ Returns date/time of the last time tag connected """
+
+        return self.device_data.last_seen
+
+    @property
+    def device_class(self) -> SensorDeviceClass:
+        """ Return entity device class """
+
+        return SensorDeviceClass.TIMESTAMP
+
+    @property
+    def entity_category(self) -> EntityCategory:
+        """ Set category to diagnostic. """
+
+        return EntityCategory.DIAGNOSTIC
+
+    @property
+    def icon(self) -> str:
+        return 'mdi:web'
+
+
+class TagBattery(CoordinatorEntity, SensorEntity):
+    """ Representation of LavvieTag Battery Level """
+
+    def __init__(self, coordinator, device_id):
+        super().__init__(coordinator)
+        self.device_id = device_id
+
+
+    @property
+    def device_data(self) -> LavvieTag:
+        """ Handle coordinator LavvieTag data """
+
+        return self.coordinator.data.lavvie_tags[self.device_id]
+
+    @property
+    def device_info(self) -> dict[str, Any]:
+        """ Return device registry information for this entity. """
+
+        return {
+            "identifiers": {(DOMAIN, self.device_data.device_id), (DOMAIN, self.device_data.iot_code_tail)},
+            "name": self.device_data.device_name,
+            "manufacturer": "PurrSong",
+            "model": "LavvieTag",
+            "sw_version": self.device_data.current_firmware
+        }
+
+    @property
+    def unique_id(self) -> str:
+        """ Sets unique ID for this entity. """
+
+        return str(self.device_data.device_id) + '_tag_battery'
+
+    @property
+    def name(self) -> str:
+        """ Return name of the entity """
+
+        return "Battery"
+
+    @property
+    def has_entity_name(self) -> bool:
+        """ Indicate that entity has name defined """
+
+        return True
+
+    @property
+    def native_value(self) -> int:
+        """ Return current battery level or 0 if there isn't one """
+
+        if self.device_data.battery is not None:
+            return self.device_data.battery
+        else:
+            return 0
+
+    @property
+    def native_unit_of_measurement(self) -> str:
+        """ Uses percentage as the unit """
+
+        return PERCENTAGE
+
+    @property
+    def device_class(self) -> SensorDeviceClass:
+        """ Return entity device class """
+
+        return SensorDeviceClass.BATTERY
+
+    @property
+    def state_class(self) -> SensorStateClass:
+        """ Return the type of state class """
+
+        return SensorStateClass.MEASUREMENT
+
+    @property
+    def entity_category(self) -> EntityCategory:
+        """ Set category to diagnostic. """
+
+        return EntityCategory.DIAGNOSTIC
