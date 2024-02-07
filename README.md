@@ -1,4 +1,4 @@
-# LavvieBot S [![hacs_badge](https://img.shields.io/badge/HACS-Custom-orange.svg)](https://github.com/custom-components/hacs)  ![GitHub manifest version (path)](https://img.shields.io/github/manifest-json/v/RobertD502/home-assistant-lavviebot?filename=custom_components%2Fpurrsong%2Fmanifest.json) 
+# Purrsong [![hacs_badge](https://img.shields.io/badge/HACS-Custom-orange.svg)](https://github.com/custom-components/hacs)  ![GitHub manifest version (path)](https://img.shields.io/github/manifest-json/v/RobertD502/home-assistant-lavviebot?filename=custom_components%2Fpurrsong%2Fmanifest.json) 
 <a href="https://www.buymeacoffee.com/RobertD502" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/default-orange.png" alt="Buy Me A Coffee" height="100" width="424"></a>
 <a href="https://liberapay.com/RobertD502/donate"><img alt="Donate using Liberapay" src="https://liberapay.com/assets/widgets/donate.svg" height="100" width="300"></a>
 
@@ -8,40 +8,41 @@
 ***All proceeds go towards helping a local animal rescue.**
 
 
-### Custom component for Home Assistant for monitoring LavvieBot S litter boxes and associated cats
+### Custom component for Home Assistant for monitoring LavvieBot S litter boxes, LavvieScanners, LavvieTags, and associated cats
 
 ## Prior To Installation
-
-You will need to create a new account in the PurrSong app and then share an invite from your primary account to the newly created account. If you use your primary account with this custom component, the primary account will get logged out off the app on your mobile device. This can be avoided by creating a dedicated account as previously mentioned.
+> [!CAUTION]
+> You will need to create a new account in the PurrSong app and then share an invite from your primary account to the newly created account. If you use your primary account with this custom component, the primary account will get logged out of the app on your mobile device.
+> This can be avoided by creating a dedicated account as previously mentioned.
 
 ## Installation
 
-**Minimum Home Assistant version requirement:** `2022.11.0`
 
-### With HACS
+#### With HACS (Recommended)
 1. Open HACS Settings and add this repository (https://github.com/RobertD502/home-assistant-lavviebot)
 as a Custom Repository (use **Integration** as the category).
-2. The `LavvieBot S` page should automatically load (or find it in the HACS Store)
+2. The `Purrsong` page should automatically load (or find it in the HACS Store)
 3. Click `Install`
 
-### Manual
+#### Manual
 From this repo, copy the `purrsong` directory from `custom_components` and place it inside of your Home Assistant Core installation's `custom_components` directory.
 
-`Note`: If installing manually, in order to be alerted about new releases, you will need to subscribe to releases from this repository. 
+> [!WARNING]
+> If installing manually, in order to be alerted about new releases, you will need to subscribe to releases from this repository.
 
 ## Setup
-1. Install this integration.
-2. Navigate to the Home Assistant Integrations page (Settings --> Devices & Services)
-3. Click the `+ ADD INTEGRATION` button in the lower right-hand corner
-4. Search for `Lavviebot` or `PurrSong`
-
-Alternatively, click on the button below to add the integration:
 
 [![Open your Home Assistant instance and start setting up a new integration.](https://my.home-assistant.io/badges/config_flow_start.svg)](https://my.home-assistant.io/redirect/config_flow_start/?domain=purrsong)
+> [!Tip]
+> If you are unable to use the button above, follow the steps below:
+> 1. Navigate to the Home Assistant Integrations page (Settings --> Devices & Services)
+> 2. Click the `+ ADD INTEGRATION` button in the lower right-hand corner
+> 3. Search for `PurrSong`
+
 
 ## Features
 
-Litter boxes and cats are exposed as devices along with their associated entities. See below for entities available.
+Litter boxes, scanners, tags, and cats are exposed as devices along with their associated entities. See below for entities available.
 
 ##
 
@@ -50,7 +51,7 @@ Litter boxes and cats are exposed as devices along with their associated entitie
 
 | Entity | Entity type | Description |
 | --- | --- | --- |
-| `Beacon battery` | `sensor` | Battery level for [LavvieBeacon Antenna Module](https://www.robotshop.com/en/lavviebeacon-antenna-module-lavvietag-lavviebot-s.html). State is `Unknown` if there is no LavvieBeacon associated with the litter box. |
+| `Beacon battery` | `sensor` | Battery level for [LavvieBeacon Antenna Module](https://www.robotshop.com/en/lavviebeacon-antenna-module-lavvietag-lavviebot-s.html). State is `0` if there is no LavvieBeacon associated with the litter box. |
 | `Error time` | `sensor` | When the error, displayed in the `Latest error` sensor, occurred. |
 | `Humidity` | `sensor` | Humidity as reported by the litter box. |
 | `Last cat used` | `sensor` | Name of the last cat that used the litter box. Value will be "Unknown" if cat named "Unknown" used the litter box last. |
@@ -68,7 +69,25 @@ Litter boxes and cats are exposed as devices along with their associated entitie
 | `Wait time` | `sensor` | Minutes litter box is set to wait, after it has been used, before scooping. |
 | `Waste drawer full` | `binary_sensor` | `On` if the waste drawer is full. Otherwise `Off`. Can be used to set up alerts. |
 | `Waste status` | `sensor` | Descriptive status of the waste level in the waste drawer. Possible states include: <ul><li>Full</li><li>Almost Full</li><li>Empty or Piled</li> |
-| `Firmware update` | `update` | If Lavviebot has a firmware update available, the version of the new firmware will be shown. If Lavviebot firmware is up-to-date, "Up-to-date" will be shown. |
+| `Firmware update` | `update` | If Lavviebot has a firmware update available, the version of the new firmware will be shown. If Lavviebot firmware is up-to-date, "Up-to-date" will be shown. Use the PurrSong app to update firmware. |
+
+
+### LavvieScanner
+
+| Entity | Entity type | Description |
+| --- | --- | --- |
+| `WiFi status` | `binary_sensor` | Shows connection status between the LavvieScanner and your WiFi network. |
+| `Firmware update` | `update` | If a firmware update is available, the version of the new firmware will be shown. If firmware is up-to-date, "Up-to-date" will be shown. Use the PurrSong app to update firmware. |
+| `Last seen` | `sensor` | Displays date and time of the last time LavvieScanner communicated with PurrSong servers. |
+
+
+### LavvieTag
+
+| Entity | Entity type | Description |
+| --- | --- | --- |
+| `Battery` | `sensor` | Current battery percentage. |
+| `Firmware update` | `update` | If a firmware update is available, the version of the new firmware will be shown. If firmware is up-to-date, "Up-to-date" will be shown. Use the PurrSong app to update firmware. |
+| `Last seen` | `sensor` | Displays date and time of the last time LavvieTag communicated with PurrSong servers via LavvieScanner or LavvieBeacon. |
 
 
 ### Cat
@@ -77,6 +96,11 @@ Litter boxes and cats are exposed as devices along with their associated entitie
 | --- | --- | --- |
 | `Litter box use count` | `sensor` | Total number of times cat has used the litter box today. |
 | `Litter box use duration` | `sensor` | Total length of time cat has used the litter box today (in seconds). |
-| `Weight` | `sensor` | Most recent cat weight obtained for the current day |
+| `Weight` | `sensor` | Most recent cat weight obtained for the current day. |
+| `Resting` | `sensor` | `Only available if cat is using a LavvieTag` |
+| `Running` | `sensor` | `Only available if cat is using a LavvieTag` |
+| `Sleeping` | `sensor` | `Only available if cat is using a LavvieTag` |
+| `Walking` | `sensor` | `Only available if cat is using a LavvieTag` |
+| `Zoomies` | `sensor` | `Only available if cat is using a LavvieTag` |
 
 

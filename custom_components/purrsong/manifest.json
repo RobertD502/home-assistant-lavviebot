@@ -1,6 +1,6 @@
 {
   "domain": "purrsong",
-  "name": "LavvieBot S",
+  "name": "Purrsong",
   "codeowners": [
     "@RobertD502"
   ],
@@ -11,7 +11,7 @@
   "iot_class": "cloud_polling",
   "issue_tracker": "https://github.com/RobertD502/home-assistant-lavviebot/issues",
   "requirements": [
-    "lavviebotaio==0.2.2.1"
+    "lavviebotaio==0.3.0"
   ],
-  "version": "0.2.0"
+  "version": "0.3.0"
 }
