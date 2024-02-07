@@ -8,8 +8,7 @@
             "cannot_connect": "Failed to connect",
             "incorrect_email_pass": "Invalid Email & Password for selected account",
             "invalid_auth": "Invalid authentication. Are your credentials correct?",
-            "no_litter_boxes": "No Litter Boxes discovered",
-            "no_user_id": "Could not get User ID on account"
+            "no_devices": "No Devices discovered"
         },
         "step": {
             "user": {
