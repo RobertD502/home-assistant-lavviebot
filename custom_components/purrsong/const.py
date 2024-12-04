@@ -10,7 +10,7 @@ from homeassistant.const import Platform
 
 LOGGER = logging.getLogger(__package__)
 
-DEFAULT_SCAN_INTERVAL = 60
+DEFAULT_SCAN_INTERVAL = 90
 DOMAIN = "purrsong"
 PLATFORMS = [
     Platform.BINARY_SENSOR,
