@@ -5,7 +5,7 @@
       "user": {
         "title": "Fill in your PurrSong credentials",
         "data": {
-          "username": "PurrSong Username",
+          "email": "PurrSong Email",
           "password": "PurrSong Password"
         }
       },
