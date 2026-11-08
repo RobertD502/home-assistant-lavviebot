@@ -48,12 +48,8 @@ class LavviebotDataUpdateCoordinator(DataUpdateCoordinator):
             raise ConfigEntryAuthFailed(error) from error
         except LavviebotError as error:
             raise UpdateFailed(error) from error
-        except LavviebotRateLimit:
-            LOGGER.debug("Purrsong API has rate limited current session. Starting new ClientSession.")
-            await self.client._session.close()
-            self.client._session = ClientSession()
-            self.client.cookie = None
-            self.client.token = None
-            return await self._async_update_data()
+        except LavviebotRateLimit as error:
+            LOGGER.warning("PurrSong API rate limit reached; backing off until next update: %s", error)
+            raise UpdateFailed(error) from error
         else:
             return data

@@ -4,13 +4,13 @@ import asyncio
 import logging
 
 from aiohttp.client_exceptions import ClientConnectionError
-from lavviebot.exceptions import LavviebotAuthError, LavviebotError
+from lavviebot.exceptions import LavviebotAuthError, LavviebotError, LavviebotRateLimit
 
 from homeassistant.const import Platform
 
 LOGGER = logging.getLogger(__package__)
 
-DEFAULT_SCAN_INTERVAL = 90
+DEFAULT_SCAN_INTERVAL = 180
 DOMAIN = "purrsong"
 PLATFORMS = [
     Platform.BINARY_SENSOR,
@@ -26,4 +26,5 @@ LAVVIEBOT_ERRORS = (
     asyncio.TimeoutError,
     LavviebotAuthError,
     LavviebotError,
+    LavviebotRateLimit,
 )

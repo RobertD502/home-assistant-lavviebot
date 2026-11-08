@@ -2,18 +2,74 @@
 from __future__ import annotations
 
 from http.cookies import SimpleCookie
+import time
 from typing import Any
 
 from aiohttp import ClientSession
 import async_timeout
 from lavviebot import LavviebotClient
-from lavviebot.exceptions import LavviebotAuthError
+from lavviebot.exceptions import LavviebotAuthError, LavviebotError, LavviebotRateLimit
+from lavviebot.model import LavviebotData
 
 from .const import LOGGER, LAVVIEBOT_ERRORS, TIMEOUT
 
+LOGIN_COOLDOWN_SECONDS = 600
+_LOGIN_COOLDOWN_UNTIL: dict[str, float] = {}
+
 
 class PurrSongClient(LavviebotClient):
-    """LavviebotClient subclass that fixes aiohttp SimpleCookie header compatibility."""
+    """LavviebotClient subclass that fixes aiohttp SimpleCookie header compatibility and login loops."""
+
+    def __init__(
+        self,
+        email: str,
+        password: str,
+        session: ClientSession | None = None,
+        timeout: int = TIMEOUT,
+    ) -> None:
+        super().__init__(email, password, session=session, timeout=timeout)
+        self._logged_in_this_cycle: bool = False
+
+    async def login(self) -> None:
+        """Get fresh cookie and token, enforcing rate-limit cooldown and preventing recursive loops."""
+        now = time.monotonic()
+        cooldown_until = _LOGIN_COOLDOWN_UNTIL.get(self.email, 0.0)
+        if now < cooldown_until:
+            remaining = int(cooldown_until - now)
+            raise LavviebotRateLimit(
+                f"PurrSong login rate-limited; cooling down for {remaining}s before retrying."
+            )
+
+        if self._logged_in_this_cycle:
+            raise LavviebotError(
+                "PurrSong API requested re-login again within the same update cycle; aborting to prevent login loop."
+            )
+
+        self._logged_in_this_cycle = True
+        self._session.cookie_jar.clear()
+        self.cookie = None
+        self.token = None
+        try:
+            await super().login()
+        except LavviebotError as err:
+            if "Too many login attempts" in str(err) or "Too many requests" in str(err):
+                _LOGIN_COOLDOWN_UNTIL[self.email] = time.monotonic() + LOGIN_COOLDOWN_SECONDS
+                raise LavviebotRateLimit(str(err)) from err
+            raise
+
+    async def async_get_data(self) -> LavviebotData:
+        """Return dataclass with litter boxes and cats associated with account."""
+        self._logged_in_this_cycle = False
+        try:
+            return await super().async_get_data()
+        except LavviebotRateLimit:
+            _LOGIN_COOLDOWN_UNTIL[self.email] = time.monotonic() + LOGIN_COOLDOWN_SECONDS
+            raise
+        except LavviebotError as err:
+            if "Too many login attempts" in str(err) or "Too many requests" in str(err):
+                _LOGIN_COOLDOWN_UNTIL[self.email] = time.monotonic() + LOGIN_COOLDOWN_SECONDS
+                raise LavviebotRateLimit(str(err)) from err
+            raise
 
     async def _post(
         self,
