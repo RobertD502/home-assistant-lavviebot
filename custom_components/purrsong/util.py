@@ -13,7 +13,7 @@ from lavviebot.model import LavviebotData
 
 from .const import LOGGER, LAVVIEBOT_ERRORS, TIMEOUT
 
-LOGIN_COOLDOWN_SECONDS = 600
+LOGIN_COOLDOWN_SECONDS = 300
 _LOGIN_COOLDOWN_UNTIL: dict[str, float] = {}
 
 
@@ -49,27 +49,12 @@ class PurrSongClient(LavviebotClient):
         self._session.cookie_jar.clear()
         self.cookie = None
         self.token = None
-        try:
-            await super().login()
-        except LavviebotError as err:
-            if "Too many login attempts" in str(err) or "Too many requests" in str(err):
-                _LOGIN_COOLDOWN_UNTIL[self.email] = time.monotonic() + LOGIN_COOLDOWN_SECONDS
-                raise LavviebotRateLimit(str(err)) from err
-            raise
+        await super().login()
 
     async def async_get_data(self) -> LavviebotData:
         """Return dataclass with litter boxes and cats associated with account."""
         self._logged_in_this_cycle = False
-        try:
-            return await super().async_get_data()
-        except LavviebotRateLimit:
-            _LOGIN_COOLDOWN_UNTIL[self.email] = time.monotonic() + LOGIN_COOLDOWN_SECONDS
-            raise
-        except LavviebotError as err:
-            if "Too many login attempts" in str(err) or "Too many requests" in str(err):
-                _LOGIN_COOLDOWN_UNTIL[self.email] = time.monotonic() + LOGIN_COOLDOWN_SECONDS
-                raise LavviebotRateLimit(str(err)) from err
-            raise
+        return await super().async_get_data()
 
     async def _post(
         self,
@@ -87,7 +72,16 @@ class PurrSongClient(LavviebotClient):
                 )
             else:
                 req_headers.pop("Cookie", None)
-        return await super()._post(req_headers, payload, is_cookie)
+        try:
+            return await super()._post(req_headers, payload, is_cookie)
+        except LavviebotRateLimit:
+            _LOGIN_COOLDOWN_UNTIL[self.email] = time.monotonic() + LOGIN_COOLDOWN_SECONDS
+            raise
+        except LavviebotError as err:
+            if "Too many login attempts" in str(err) or "Too many requests" in str(err):
+                _LOGIN_COOLDOWN_UNTIL[self.email] = time.monotonic() + LOGIN_COOLDOWN_SECONDS
+                raise LavviebotRateLimit(str(err)) from err
+            raise
 
     async def async_discover_litter_boxes(self) -> dict[str, Any]:
         """Fix upstream typo in async_discover_devices token re-auth retry."""
