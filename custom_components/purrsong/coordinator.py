@@ -4,7 +4,6 @@ from __future__ import annotations
 from datetime import timedelta
 
 from aiohttp import ClientSession
-from lavviebot import LavviebotClient
 from lavviebot.exceptions import LavviebotAuthError, LavviebotError, LavviebotRateLimit
 from lavviebot.model import LavviebotData
 
@@ -16,6 +15,7 @@ from homeassistant.exceptions import ConfigEntryAuthFailed
 from homeassistant.helpers.update_coordinator import DataUpdateCoordinator, UpdateFailed
 
 from .const import DEFAULT_SCAN_INTERVAL, DOMAIN, LOGGER, TIMEOUT
+from .util import PurrSongClient
 
 class LavviebotDataUpdateCoordinator(DataUpdateCoordinator):
     """ PurrSong Data Update Coordinator. """
@@ -25,7 +25,7 @@ class LavviebotDataUpdateCoordinator(DataUpdateCoordinator):
     def __init__(self, hass: HomeAssistant, entry: ConfigEntry) -> None:
         """Initialize the PurrSong coordinator."""
 
-        self.client = LavviebotClient(
+        self.client = PurrSongClient(
             entry.data[CONF_EMAIL],
             entry.data[CONF_PASSWORD],
             session=ClientSession(),
@@ -34,6 +34,7 @@ class LavviebotDataUpdateCoordinator(DataUpdateCoordinator):
         super().__init__(
             hass,
             LOGGER,
+            config_entry=entry,
             name=DOMAIN,
             update_interval=timedelta(seconds=DEFAULT_SCAN_INTERVAL),
         )
@@ -47,11 +48,8 @@ class LavviebotDataUpdateCoordinator(DataUpdateCoordinator):
             raise ConfigEntryAuthFailed(error) from error
         except LavviebotError as error:
             raise UpdateFailed(error) from error
-        except LavviebotRateLimit:
-            LOGGER.debug("Purrsong API has rate limited current session. Starting new ClientSession.")
-            await self.client._session.close()
-            self.client._session = ClientSession()
-            self.client.token = None
-            return await self._async_update_data()
+        except LavviebotRateLimit as error:
+            LOGGER.warning("PurrSong API rate limit reached; backing off until next update: %s", error)
+            raise UpdateFailed(error) from error
         else:
             return data

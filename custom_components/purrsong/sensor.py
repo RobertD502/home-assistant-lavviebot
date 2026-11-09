@@ -1644,7 +1644,7 @@ class ErrorTime(CoordinatorEntity, SensorEntity):
     def native_value(self) -> datetime | str:
         """ Returns datetime of the most recent error """
 
-        return datetime.utcfromtimestamp(int(self.device_data.error_log[0]['creationTime']) / 1000).replace(tzinfo=timezone.utc)
+        return datetime.fromtimestamp(int(self.device_data.error_log[0]['creationTime']) / 1000, tz=timezone.utc)
 
     @property
     def device_class(self) -> SensorDeviceClass:

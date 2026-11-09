@@ -15,7 +15,11 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     """Set up PurrSong from a config entry."""
 
     coordinator = LavviebotDataUpdateCoordinator(hass, entry)
-    await coordinator.async_config_entry_first_refresh()
+    try:
+        await coordinator.async_config_entry_first_refresh()
+    except Exception:
+        await coordinator.client._session.close()
+        raise
     hass.data.setdefault(DOMAIN, {})[entry.entry_id] = coordinator
 
     await hass.config_entries.async_forward_entry_setups(entry, PLATFORMS)
@@ -25,7 +29,8 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
 async def async_unload_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     """Unload PurrSong config entry."""
     if unload_ok := await hass.config_entries.async_unload_platforms(entry, PLATFORMS):
-        del hass.data[DOMAIN][entry.entry_id]
+        coordinator: LavviebotDataUpdateCoordinator = hass.data[DOMAIN].pop(entry.entry_id)
+        await coordinator.client._session.close()
         if not hass.data[DOMAIN]:
             del hass.data[DOMAIN]
     return unload_ok
